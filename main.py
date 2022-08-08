@@ -1,6 +1,6 @@
 import os
 import sys
-import face_recognition
+import face_recognition as fr
 import cv2
 import numpy as np
 
@@ -18,8 +18,8 @@ process_this_frame = True
 
 try:
     for name in os.listdir(path_dir):
-        image = face_recognition.load_image_file(path_dir+ name)
-        face_encoding = face_recognition.face_encodings(image)
+        image = fr.load_image_file(path_dir+ name)
+        face_encoding = fr.face_encodings(image)
         if len(face_encoding) > 0:
             face_encoding = face_encoding[0]
             known_face_encodings.append(face_encoding)
@@ -39,15 +39,15 @@ try:
 
             rgb_small_frame = small_frame[:, :, ::-1]
 
-            face_locations = face_recognition.face_locations(rgb_small_frame)
-            face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+            face_locations = fr.face_locations(rgb_small_frame)
+            face_encodings = fr.face_encodings(rgb_small_frame, face_locations)
 
             face_names = []
             for face_encoding in face_encodings:
 
-                matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+                matches = fr.compare_faces(known_face_encodings, face_encoding)
                 name = "Unknown"
-                face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+                face_distances = fr.face_distance(known_face_encodings, face_encoding)
                 best_match_index = np.argmin(face_distances)
                 if matches[best_match_index]:
                     name = known_face_names[best_match_index]
